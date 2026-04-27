@@ -1,10 +1,10 @@
-import { createBrowserRouter } from "react-router";
 import { lazy, Suspense, type ReactNode } from "react";
+import { createBrowserRouter } from "react-router";
 
-const LandingPage = lazy(() => import("./pages/LandingPage"));
-const FacultyPortal = lazy(() => import("./pages/FacultyPortal"));
-const StudentPortal = lazy(() => import("./pages/StudentPortal"));
-const UnifiedLogin = lazy(() => import("./pages/UnifiedLogin"));
+const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
+const LoginPageWithNavbar = lazy(() => import("@/features/auth/pages/LoginPageWithNavbar"));
+const FacultyPortal = lazy(() => import("@/features/portal/faculty/pages/FacultyPortal"));
+const StudentPortal = lazy(() => import("@/features/portal/student/pages/StudentPortal"));
 
 const withSuspense = (component: ReactNode) => (
   <Suspense fallback={<div className="min-h-screen grid place-items-center text-muted-foreground">Loading...</div>}>
@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: withSuspense(<UnifiedLogin />),
+    element: withSuspense(<LoginPageWithNavbar />),
   },
   {
     path: "/faculty/dashboard",
@@ -27,11 +27,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/student/login",
-    element: withSuspense(<UnifiedLogin />),
+    element: withSuspense(<LoginPageWithNavbar />),
   },
   {
     path: "/faculty/login",
-    element: withSuspense(<UnifiedLogin />),
+    element: withSuspense(<LoginPageWithNavbar />),
   },
   {
     path: "/student/dashboard",

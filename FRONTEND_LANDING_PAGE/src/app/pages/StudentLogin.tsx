@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import logo from "@/imports/LEARNHUB-GOLD.png";
 import studentIcon from "figma:asset/student-icon.svg";
-import { ArrowLeft, User, Lock } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 
 export default function StudentLogin() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function StudentLogin() {
   const [formData, setFormData] = useState({
     id: "",
     password: "",
-    name: ""
+    name: "",
   });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -194,7 +194,8 @@ export default function StudentLogin() {
           {!isRegister && (
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <p className="text-xs text-muted-foreground text-center">
-                Demo: <span className="font-semibold">ST-10001</span> / <span className="font-semibold">student123</span>
+                Demo: <span className="font-semibold">ST-10001</span> /{" "}
+                <span className="font-semibold">student123</span>
               </p>
             </div>
           )}
@@ -203,3 +204,4 @@ export default function StudentLogin() {
     </div>
   );
 }
+

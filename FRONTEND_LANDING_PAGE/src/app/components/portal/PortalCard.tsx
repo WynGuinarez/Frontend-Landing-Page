@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
-export const portalCardClass =
-  "rounded-xl border border-border bg-card p-8 shadow-lg";
+export const portalCardClass = "rounded-xl border border-border bg-card p-8 shadow-lg";
 
 interface PortalCardProps {
   children: ReactNode;

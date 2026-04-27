@@ -1,41 +1,14 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import {
-  Home,
-  Calendar,
-  FileText,
-  Settings,
-  Clock,
-  Search,
-  User,
-  ChevronLeft,
-  ChevronRight
-} from "lucide-react";
-import logo from "@/imports/LEARNHUB-GOLD.png";
-import { useAuth } from "../hooks/useAuth";
-import PortalLayout from "../components/portal/PortalLayout";
-import { portalCardClass } from "../components/portal/PortalCard";
-import PortalHeader from "../components/portal/PortalHeader";
-import PortalSidebar from "../components/portal/PortalSidebar";
+import { ChevronLeft, ChevronRight, Clock, FileText, Search } from "lucide-react";
 
-const FACULTY_NAV_ITEMS = [
-  { icon: Home, label: "Dashboard", view: "dashboard" },
-  { icon: Calendar, label: "Attendance", view: "attendance" },
-  { icon: FileText, label: "Reports", view: "reports" },
-  { icon: Settings, label: "Settings", view: "settings" },
-] as const;
+import { useAuth } from "@/features/auth";
+import { FACULTY_ATTENDANCE_HISTORY, FACULTY_NAV_ITEMS } from "@/features/portal/faculty/model/constants";
 
-const FACULTY_ATTENDANCE_HISTORY = [
-  { id: 1, date: "2026-04-11", timeIn: "08:00 AM", timeOut: "05:00 PM", subject: "SE102 - Software Engineering" },
-  { id: 2, date: "2026-04-10", timeIn: "08:15 AM", timeOut: "05:15 PM", subject: "AL102 - Algorithm Design" },
-  { id: 3, date: "2026-04-09", timeIn: "08:00 AM", timeOut: "05:00 PM", subject: "SE102 - Software Engineering" },
-  { id: 4, date: "2026-04-08", timeIn: "08:10 AM", timeOut: "05:10 PM", subject: "DM104 - Data Management" },
-  { id: 5, date: "2026-04-07", timeIn: "08:00 AM", timeOut: "05:00 PM", subject: "SE102 - Software Engineering" },
-  { id: 6, date: "2026-04-04", timeIn: "08:05 AM", timeOut: "05:05 PM", subject: "AL102 - Algorithm Design" },
-  { id: 7, date: "2026-04-03", timeIn: "08:00 AM", timeOut: "05:00 PM", subject: "SE102 - Software Engineering" },
-  { id: 8, date: "2026-04-02", timeIn: "08:20 AM", timeOut: "05:20 PM", subject: "DM104 - Data Management" },
-];
+import PortalHeader from "@/app/components/portal/PortalHeader";
+import PortalLayout from "@/app/components/portal/PortalLayout";
+import PortalSidebar from "@/app/components/portal/PortalSidebar";
 
 export default function FacultyPortal() {
   const navigate = useNavigate();
@@ -46,6 +19,8 @@ export default function FacultyPortal() {
   const [showProfile, setShowProfile] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUser || currentUser.type !== "faculty") {
@@ -63,15 +38,13 @@ export default function FacultyPortal() {
     role: "Senior Faculty",
     email: `${currentUser.id.toLowerCase().replace("-", "")}@intelearnhub.com`,
     department: "Computer Science",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
   };
 
   const filteredHistory = useMemo(
     () =>
       FACULTY_ATTENDANCE_HISTORY.filter(
-        (record) =>
-          record.date.includes(searchTerm) ||
-          record.subject.toLowerCase().includes(searchTerm.toLowerCase())
+        (record) => record.date.includes(searchTerm) || record.subject.toLowerCase().includes(searchTerm.toLowerCase())
       ),
     [searchTerm]
   );
@@ -93,8 +66,17 @@ export default function FacultyPortal() {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
+
+  const surfaceClass =
+    "rounded-2xl border border-border/80 bg-card/95 p-6 shadow-[0_18px_36px_rgba(11,11,11,0.08)] backdrop-blur-sm sm:p-8";
+  const metricClass = "rounded-xl border border-accent/20 bg-gradient-to-br from-secondary/50 via-card to-card p-5";
+  const mutedInputClass =
+    "w-full rounded-xl border border-border bg-background/80 px-4 py-3 text-foreground placeholder:text-muted-foreground/80 focus:border-accent focus:outline-none";
+  const searchInputClass =
+    "w-full rounded-xl border border-border bg-background/80 py-3 pr-4 pl-10 text-foreground placeholder:text-muted-foreground/80 focus:border-accent focus:outline-none";
+  const sidebarWidth = isSidebarCollapsed ? "96px" : "320px";
 
   const renderDashboard = () => (
     <>
@@ -103,27 +85,32 @@ export default function FacultyPortal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className={portalCardClass}
+        className={surfaceClass}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-black mb-2">
-              Welcome, {facultyData.name.split(' ')[1]}!
-            </h2>
-            <p className="text-gray-600">
+            <p className="mb-2 inline-flex items-center rounded-full border border-accent/35 bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#b08d18]">
+              Faculty Workspace
+            </p>
+            <h2 className="mb-2 text-3xl font-bold text-foreground">Welcome, {facultyData.name.split(" ")[1]}!</h2>
+            <p className="text-muted-foreground">
               {isTimedIn ? "You are currently Timed In" : "Ready to start your day?"}
             </p>
           </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowProfile(!showProfile)}
-            className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2"
-          >
-            <User className="w-5 h-5" />
-            View Profile
-          </motion.button>
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className={metricClass}>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Shift Status</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{isTimedIn ? "Active" : "Standby"}</p>
+          </div>
+          <div className={metricClass}>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Courses Handled</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">3</p>
+          </div>
+          <div className={metricClass}>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Department</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{facultyData.department}</p>
+          </div>
         </div>
       </motion.div>
 
@@ -132,7 +119,7 @@ export default function FacultyPortal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className={portalCardClass}
+        className={surfaceClass}
       >
         <div className="flex items-center gap-3 mb-6">
           <Clock className="w-6 h-6 text-[#d4af37]" />
@@ -145,18 +132,16 @@ export default function FacultyPortal() {
             whileTap={{ scale: 0.98 }}
             onClick={handleTimeIn}
             disabled={isTimedIn}
-            className={`p-8 rounded-xl border-2 transition-all duration-300 ${
+            className={`rounded-2xl border p-8 text-left transition-all duration-300 ${
               isTimedIn
-                ? "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-br from-[#d4af37] to-[#f0c24b] border-[#d4af37] text-black font-bold hover:shadow-xl"
+                ? "cursor-not-allowed border-border bg-muted text-muted-foreground"
+                : "border-accent/60 bg-gradient-to-br from-accent/80 to-secondary text-accent-foreground hover:shadow-xl"
             }`}
           >
             <div className="text-center">
               <Clock className="w-12 h-12 mx-auto mb-4" />
               <div className="text-2xl font-bold mb-2">Time In</div>
-              <div className="text-sm opacity-80">
-                {isTimedIn ? "Already timed in" : "Click to start your shift"}
-              </div>
+              <div className="text-sm opacity-80">{isTimedIn ? "Already timed in" : "Click to start your shift"}</div>
             </div>
           </motion.button>
 
@@ -165,18 +150,16 @@ export default function FacultyPortal() {
             whileTap={{ scale: 0.98 }}
             onClick={handleTimeOut}
             disabled={!isTimedIn}
-            className={`p-8 rounded-xl border-2 transition-all duration-300 ${
+            className={`rounded-2xl border p-8 text-left transition-all duration-300 ${
               !isTimedIn
-                ? "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-br from-black to-gray-800 border-black text-white font-bold hover:shadow-xl"
+                ? "cursor-not-allowed border-border bg-muted text-muted-foreground"
+                : "border-primary bg-gradient-to-br from-primary to-primary/90 font-bold text-primary-foreground hover:shadow-xl"
             }`}
           >
             <div className="text-center">
               <Clock className="w-12 h-12 mx-auto mb-4" />
               <div className="text-2xl font-bold mb-2">Time Out</div>
-              <div className="text-sm opacity-80">
-                {!isTimedIn ? "Time in first" : "Click to end your shift"}
-              </div>
+              <div className="text-sm opacity-80">{!isTimedIn ? "Time in first" : "Click to end your shift"}</div>
             </div>
           </motion.button>
         </div>
@@ -185,9 +168,9 @@ export default function FacultyPortal() {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="mt-6 p-4 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-lg"
+            className="mt-6 rounded-xl border border-accent/40 bg-secondary/60 p-4"
           >
-            <div className="flex items-center gap-2 text-black">
+            <div className="flex items-center gap-2 text-foreground">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
               <span className="font-semibold">Status: Active - Timed In at {new Date().toLocaleTimeString()}</span>
             </div>
@@ -200,7 +183,7 @@ export default function FacultyPortal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className={portalCardClass}
+        className={surfaceClass}
       >
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-foreground">Attendance History</h3>
@@ -214,14 +197,14 @@ export default function FacultyPortal() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent transition-colors duration-300"
+              className="rounded-xl border border-border bg-background/80 py-2 pr-4 pl-10 transition-colors duration-300 focus:border-accent focus:outline-none"
             />
           </div>
         </div>
 
-        <div className="max-h-[24rem] overflow-auto rounded-lg border border-border">
+        <div className="max-h-[24rem] overflow-auto rounded-xl border border-border/80">
           <table className="w-full">
-            <thead className="sticky top-0 z-10 bg-background">
+            <thead className="sticky top-0 z-10 bg-muted/80 backdrop-blur-sm">
               <tr className="border-b-2 border-border">
                 <th className="text-left py-4 px-4 text-muted-foreground font-semibold">Date</th>
                 <th className="text-left py-4 px-4 text-muted-foreground font-semibold">Time In</th>
@@ -302,52 +285,81 @@ export default function FacultyPortal() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={portalCardClass}
+      className={surfaceClass}
     >
-      <h2 className="text-3xl font-bold text-black mb-6">Full Attendance Records</h2>
-
-      <div className="mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search date or subject..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-          />
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <h2 className="text-3xl font-bold text-foreground">Full Attendance Records</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Review your time logs and tracked teaching sessions.</p>
+        </div>
+        <div className="inline-flex items-center rounded-full border border-accent/35 bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#b08d18]">
+          Faculty Attendance
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b-2 border-gray-200 bg-gray-50">
-              <th className="text-left py-4 px-4 text-gray-600 font-semibold">Date</th>
-              <th className="text-left py-4 px-4 text-gray-600 font-semibold">Time In</th>
-              <th className="text-left py-4 px-4 text-gray-600 font-semibold">Time Out</th>
-              <th className="text-left py-4 px-4 text-gray-600 font-semibold">Subject</th>
-              <th className="text-left py-4 px-4 text-gray-600 font-semibold">Hours</th>
+      <div className="mb-5 rounded-xl border border-border/80 bg-muted/35 p-3 sm:p-4">
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search date or subject..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className={searchInputClass}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:bg-secondary">
+              This Week
+            </button>
+            <button className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:bg-secondary">
+              This Month
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-border/80">
+        <table className="w-full min-w-[700px]">
+          <thead className="sticky top-0 z-10 bg-muted/85 backdrop-blur-sm">
+            <tr className="border-b-2 border-border bg-muted/80">
+              <th className="px-4 py-4 text-left font-semibold text-muted-foreground">Date</th>
+              <th className="px-4 py-4 text-left font-semibold text-muted-foreground">Time In</th>
+              <th className="px-4 py-4 text-left font-semibold text-muted-foreground">Time Out</th>
+              <th className="px-4 py-4 text-left font-semibold text-muted-foreground">Subject</th>
+              <th className="px-4 py-4 text-left font-semibold text-muted-foreground">Hours</th>
             </tr>
           </thead>
           <tbody>
-            {filteredHistory.map((record, index) => (
+            {filteredHistory.map((record) => (
               <tr
                 key={record.id}
-                className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200"
+                className="border-b border-border/60 transition-colors duration-200 hover:bg-muted/40"
               >
-                <td className="py-4 px-4 text-black font-medium">{record.date}</td>
-                <td className="py-4 px-4 text-gray-700">{record.timeIn}</td>
-                <td className="py-4 px-4 text-gray-700">{record.timeOut}</td>
-                <td className="py-4 px-4 text-gray-700">{record.subject}</td>
-                <td className="py-4 px-4 text-gray-700">9 hrs</td>
+                <td className="px-4 py-4 font-medium text-foreground">{record.date}</td>
+                <td className="px-4 py-4 text-muted-foreground">{record.timeIn}</td>
+                <td className="px-4 py-4 text-muted-foreground">{record.timeOut}</td>
+                <td className="px-4 py-4 text-muted-foreground">{record.subject}</td>
+                <td className="px-4 py-4 text-muted-foreground">9 hrs</td>
               </tr>
             ))}
+            {filteredHistory.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                  No attendance records match your search.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4 text-sm text-muted-foreground">
+        Showing {filteredHistory.length} attendance record{filteredHistory.length === 1 ? "" : "s"}.
       </div>
     </motion.div>
   );
@@ -358,32 +370,35 @@ export default function FacultyPortal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className={portalCardClass}
+        className={surfaceClass}
       >
-        <h2 className="text-3xl font-bold text-black mb-6">Performance Reports</h2>
+        <h2 className="mb-6 text-3xl font-bold text-foreground">Performance Reports</h2>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-[#d4af37]/10 to-transparent p-6 rounded-xl border border-[#d4af37]/30">
-            <div className="text-sm text-gray-600 mb-2">Total Classes</div>
-            <div className="text-4xl font-bold text-black">24</div>
+          <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-secondary to-card p-6">
+            <div className="mb-2 text-sm text-muted-foreground">Total Classes</div>
+            <div className="text-4xl font-bold text-foreground">24</div>
             <div className="text-sm text-green-600 mt-2">+3 this month</div>
           </div>
-          <div className="bg-gradient-to-br from-black/5 to-transparent p-6 rounded-xl border border-gray-200">
-            <div className="text-sm text-gray-600 mb-2">Hours Taught</div>
-            <div className="text-4xl font-bold text-black">216</div>
+          <div className="rounded-xl border border-border/80 bg-gradient-to-br from-muted to-card p-6">
+            <div className="mb-2 text-sm text-muted-foreground">Hours Taught</div>
+            <div className="text-4xl font-bold text-foreground">216</div>
             <div className="text-sm text-green-600 mt-2">+18 this month</div>
           </div>
-          <div className="bg-gradient-to-br from-[#d4af37]/10 to-transparent p-6 rounded-xl border border-[#d4af37]/30">
-            <div className="text-sm text-gray-600 mb-2">Attendance Rate</div>
-            <div className="text-4xl font-bold text-black">98%</div>
+          <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-secondary to-card p-6">
+            <div className="mb-2 text-sm text-muted-foreground">Attendance Rate</div>
+            <div className="text-4xl font-bold text-foreground">98%</div>
             <div className="text-sm text-green-600 mt-2">Excellent</div>
           </div>
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-black">Monthly Summary</h3>
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <p className="text-gray-600">Your performance this month has been outstanding. You've maintained excellent attendance and covered all scheduled classes.</p>
+          <h3 className="text-xl font-bold text-foreground">Monthly Summary</h3>
+          <div className="rounded-xl border border-border/70 bg-muted/60 p-6">
+            <p className="text-muted-foreground">
+              Your performance this month has been outstanding. You've maintained excellent attendance and covered all
+              scheduled classes.
+            </p>
           </div>
         </div>
       </motion.div>
@@ -392,15 +407,15 @@ export default function FacultyPortal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className={portalCardClass}
+        className={surfaceClass}
       >
-        <h3 className="text-2xl font-bold text-black mb-4">Download Reports</h3>
+        <h3 className="mb-4 text-2xl font-bold text-foreground">Download Reports</h3>
         <div className="grid md:grid-cols-2 gap-4">
-          <button className="px-6 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-300 flex items-center justify-center gap-2">
+          <button className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-primary-foreground transition-colors duration-300 hover:bg-accent hover:text-accent-foreground">
             <FileText className="w-5 h-5" />
             Monthly Report (PDF)
           </button>
-          <button className="px-6 py-4 bg-[#d4af37] text-black rounded-lg hover:bg-[#f0c24b] transition-colors duration-300 flex items-center justify-center gap-2">
+          <button className="flex items-center justify-center gap-2 rounded-xl border border-accent/60 bg-secondary px-6 py-4 text-foreground transition-colors duration-300 hover:bg-accent hover:text-accent-foreground">
             <FileText className="w-5 h-5" />
             Attendance Summary (CSV)
           </button>
@@ -414,76 +429,52 @@ export default function FacultyPortal() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={portalCardClass}
+      className={surfaceClass}
     >
-      <h2 className="text-3xl font-bold text-black mb-6">Account Settings</h2>
+      <h2 className="mb-6 text-3xl font-bold text-foreground">Account Settings</h2>
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-xl font-bold text-black mb-4">Profile Information</h3>
+          <h3 className="mb-4 text-xl font-bold text-foreground">Profile Information</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-              <input
-                type="text"
-                defaultValue={facultyData.name}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">Full Name</label>
+              <input type="text" defaultValue={facultyData.name} className={mutedInputClass} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                defaultValue={facultyData.email}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">Email</label>
+              <input type="email" defaultValue={facultyData.email} className={mutedInputClass} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-              <input
-                type="text"
-                defaultValue={facultyData.department}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">Department</label>
+              <input type="text" defaultValue={facultyData.department} className={mutedInputClass} />
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-xl font-bold text-black mb-4">Change Password</h3>
+        <div className="border-t border-border pt-6">
+          <h3 className="mb-4 text-xl font-bold text-foreground">Change Password</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-              <input
-                type="password"
-                placeholder="Enter current password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">Current Password</label>
+              <input type="password" placeholder="Enter current password" className={mutedInputClass} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-              <input
-                type="password"
-                placeholder="Enter new password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">New Password</label>
+              <input type="password" placeholder="Enter new password" className={mutedInputClass} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#d4af37] transition-colors duration-300"
-              />
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">Confirm New Password</label>
+              <input type="password" placeholder="Confirm new password" className={mutedInputClass} />
             </div>
           </div>
         </div>
 
         <div className="flex gap-4 pt-6">
-          <button className="px-8 py-3 bg-[#d4af37] text-black font-semibold rounded-lg hover:bg-[#f0c24b] transition-colors duration-300">
+          <button className="rounded-xl bg-primary px-8 py-3 font-semibold text-primary-foreground transition-colors duration-300 hover:bg-accent hover:text-accent-foreground">
             Save Changes
           </button>
-          <button className="px-8 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300">
+          <button className="rounded-xl border border-border bg-muted px-8 py-3 font-semibold text-foreground transition-colors duration-300 hover:bg-secondary">
             Cancel
           </button>
         </div>
@@ -495,29 +486,30 @@ export default function FacultyPortal() {
     <PortalLayout>
       <PortalSidebar
         title="Faculty Portal"
-        logoSrc={logo}
         navItems={[...FACULTY_NAV_ITEMS]}
         activeView={activeView}
         onViewChange={setActiveView}
         onLogout={handleLogout}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
+        isMobileOpen={isMobileSidebarOpen}
+        onMobileClose={() => setIsMobileSidebarOpen(false)}
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Navigation */}
-        <motion.div initial={shouldReduceMotion ? false : { y: -100 }} animate={shouldReduceMotion ? undefined : { y: 0 }} transition={{ duration: 0.5 }}>
-          <PortalHeader
-            title="Faculty Dashboard"
-            subtitle={`Welcome back, ${facultyData.name}`}
-            avatar={facultyData.avatar}
-            name={facultyData.name}
-            meta={facultyData.role}
-            onProfileClick={() => setShowProfile((prev) => !prev)}
-          />
-        </motion.div>
+      <div className="flex-1" style={{ ["--sidebar-width" as "--sidebar-width"]: sidebarWidth } as any}>
+        <PortalHeader
+          title="Faculty Dashboard"
+          subtitle={`Welcome back, ${facultyData.name}`}
+          avatar={facultyData.avatar}
+          name={facultyData.name}
+          meta={facultyData.role}
+          onProfileClick={() => setShowProfile((prev) => !prev)}
+          onMobileMenuToggle={() => setIsMobileSidebarOpen(true)}
+        />
 
         {/* Main Content */}
-        <main className="flex-1 bg-muted p-4 sm:p-6 lg:p-8">
+        <main className="min-h-screen bg-gradient-to-b from-muted/70 via-background to-secondary/30 p-4 pt-28 sm:p-6 sm:pt-28 lg:pr-8 lg:pt-32 lg:pl-[calc(var(--sidebar-width)+2rem)] lg:transition-[padding-left] lg:duration-300 lg:ease-in-out">
           <div className="max-w-7xl mx-auto space-y-8">
             {activeView === "dashboard" && renderDashboard()}
             {activeView === "attendance" && renderAttendance()}

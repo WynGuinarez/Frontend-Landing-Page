@@ -245,7 +245,7 @@
   }
 
   .brand-lockup-mark {
-    @apply h-11 w-11 rounded-lg bg-black p-1 object-contain sm:h-12 sm:w-12;
+    @apply h-12 w-12 rounded-lg bg-black p-0.5 object-contain sm:h-14 sm:w-14;
   }
 
   .brand-lockup-text {
@@ -366,7 +366,8 @@
 }
 
 @keyframes ambient-gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
@@ -375,7 +376,8 @@
 }
 
 @keyframes ambient-orb-drift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0);
   }
   50% {
@@ -396,7 +398,8 @@
 }
 
 @keyframes ambient-glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.24;
     transform: scale(0.98);
   }

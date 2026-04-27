@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import logo from "@/imports/LEARNHUB-GOLD.png";
 import facultyIcon from "figma:asset/faculty-icon.svg";
-import { ArrowLeft, User, Lock } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 
 export default function FacultyLogin() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function FacultyLogin() {
   const [formData, setFormData] = useState({
     id: "",
     password: "",
-    name: ""
+    name: "",
   });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -203,3 +203,4 @@ export default function FacultyLogin() {
     </div>
   );
 }
+
