@@ -3,15 +3,12 @@ import footerLogo from "@/assets/LEARNHUB-GOLD(1).svg";
 
 export default function FooterSection() {
   return (
-    <footer
-      id="contact"
-      className="relative z-10 scroll-mt-28 border-t border-accent/25 bg-black px-4 py-8 sm:px-6 sm:py-10"
-    >
+    <footer id="contact" className="relative z-10 scroll-mt-28 border-t border-border/80 bg-muted/55 px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl">
-        <div className="rounded-xl border border-[#2f2f2f] bg-[#0b0b0b] p-4 sm:p-5 lg:p-6">
+        <div className="rounded-2xl border border-border bg-card p-4 shadow-[0_12px_30px_rgba(31,28,20,0.08)] sm:p-5 lg:p-6">
           <div className="flex flex-col items-center text-center">
-            <img src={footerLogo} alt="Intelearn Hub" className="h-10 w-auto rounded-lg bg-black p-1" />
-            <p className="mt-3 max-w-2xl text-xs leading-relaxed text-[#c7c7c7] sm:text-sm">
+            <img src={footerLogo} alt="Intelearn Hub" className="h-10 w-auto rounded-lg bg-transparent p-1" />
+            <p className="mt-3 max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
               Intelearn Hub is an online educational institution committed to accessible, high-quality learning and
               student-centered outcomes.
             </p>
@@ -31,7 +28,7 @@ export default function FooterSection() {
                   key={item.label}
                   href="#"
                   aria-label={item.label}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#3b3b3b] bg-[#161616] text-[#e7d99c] transition-colors duration-300 hover:border-accent hover:bg-[#1f1f1f] hover:text-accent"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-accent transition-colors duration-300 hover:border-accent hover:bg-secondary hover:text-accent"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -52,7 +49,7 @@ export default function FooterSection() {
                   <a
                     key={item.label}
                     href={item.href}
-                    className="text-xs text-[#c7c7c7] transition-colors duration-300 hover:text-accent sm:text-sm"
+                    className="text-xs text-muted-foreground transition-colors duration-300 hover:text-accent sm:text-sm"
                   >
                     {item.label}
                   </a>
@@ -62,7 +59,7 @@ export default function FooterSection() {
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-accent">Contact</p>
-              <div className="mt-3 space-y-1.5 text-xs text-[#c7c7c7] sm:text-sm">
+              <div className="mt-3 space-y-1.5 text-xs text-muted-foreground sm:text-sm">
                 <p>Online Support: Mon - Fri</p>
                 <p>Email: admissions@intelearnhub.edu</p>
                 <p>Program Advising Available</p>
@@ -70,8 +67,8 @@ export default function FooterSection() {
             </div>
           </div>
 
-          <div className="mt-5 border-t border-[#2f2f2f] pt-3">
-            <div className="flex flex-col items-center justify-between gap-2 text-xs text-[#9f9f9f] sm:flex-row">
+          <div className="mt-5 border-t border-border pt-3">
+            <div className="flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
               <p>© 2026 Intelearn Hub - Online Educational Institution.</p>
               <p>All rights reserved.</p>
             </div>

@@ -1,6 +1,5 @@
 import { useReducedMotion } from "motion/react";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router";
 
 import {
   FooterSection,
@@ -17,7 +16,6 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ loginSection }: LandingPageProps) {
-  const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -40,20 +38,6 @@ export default function LandingPage({ loginSection }: LandingPageProps) {
       <TestimonialsSection shouldReduceMotion={!!shouldReduceMotion} testimonials={landingTestimonials} />
       <FooterSection />
 
-      <div className="fixed bottom-4 left-4 right-4 z-40 sm:hidden">
-        <button
-          onClick={() => {
-            if (loginSection) {
-              document.getElementById("login-interface")?.scrollIntoView({ behavior: "smooth", block: "start" });
-              return;
-            }
-            navigate("/login");
-          }}
-          className="landing-primary-btn w-full shadow-xl"
-        >
-          Login with ID
-        </button>
-      </div>
     </div>
   );
 }

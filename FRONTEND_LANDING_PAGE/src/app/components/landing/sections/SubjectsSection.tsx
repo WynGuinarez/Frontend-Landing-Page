@@ -13,7 +13,7 @@ interface SubjectsSectionProps {
 
 export default function SubjectsSection({ shouldReduceMotion, courses }: SubjectsSectionProps) {
   return (
-    <section id="subjects" className="landing-section relative z-10 scroll-mt-28 bg-muted/72 backdrop-blur-[1px]">
+    <section id="subjects" className="landing-section relative z-10 scroll-mt-28 bg-secondary/35 backdrop-blur-[1px]">
       <div className="landing-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,13 +38,13 @@ export default function SubjectsSection({ shouldReduceMotion, courses }: Subject
                 duration: 0.5,
                 delay: index * 0.1,
               }}
-              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(212, 175, 55, 0.2)" }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(31, 28, 20, 0.12)" }}
               className="landing-card landing-card-hover group relative p-8"
             >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#d4af37]/0 via-[#d4af37]/0 to-[#d4af37]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#7a5a14]/0 via-[#7a5a14]/0 to-[#7a5a14]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative">
                 <div className="mb-4 font-mono text-sm font-semibold tracking-wider text-accent">{course.code}</div>
-                <h3 className="mb-3 text-2xl font-semibold text-foreground">{course.name}</h3>
+                <h3 className="mb-3 text-2xl font-bold text-foreground">{course.name}</h3>
                 <p className="leading-relaxed text-muted-foreground">{course.description}</p>
               </div>
             </motion.div>

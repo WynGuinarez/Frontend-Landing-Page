@@ -56,7 +56,7 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
   return (
     <section
       id="testimonials"
-      className="landing-section relative z-10 scroll-mt-28 bg-background/84 backdrop-blur-[1px]"
+      className="landing-section relative z-10 scroll-mt-28 bg-background/92 backdrop-blur-[1px]"
     >
       <div className="landing-container">
         <motion.div
@@ -73,7 +73,7 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
 
         <div
           ref={carouselRef}
-          className="mx-auto max-w-3xl"
+          className="glass-panel mx-auto max-w-3xl rounded-3xl p-4 sm:p-5"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onFocusCapture={() => setIsPaused(true)}
@@ -88,19 +88,6 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
           role="region"
           aria-label="Student testimonials carousel"
         >
-          <div className="mb-4 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setIsPaused((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors duration-300 hover:border-accent hover:text-accent"
-              aria-label={isPaused ? "Resume testimonial autoplay" : "Pause testimonial autoplay"}
-              aria-pressed={isPaused}
-            >
-              {isPaused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
-              {isPaused ? "Play" : "Pause"}
-            </button>
-          </div>
-
           <div className="relative min-h-[330px]">
             <AnimatePresence mode="wait">
               <motion.div
@@ -109,14 +96,14 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
                 animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
                 exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -18 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="landing-card bg-muted p-8 sm:p-9"
+                className="landing-card bg-card p-8 sm:p-9"
                 aria-live="polite"
               >
                 <Quote className="mb-6 h-10 w-10 text-accent" />
                 <p className="mb-8 min-h-[88px] text-base leading-relaxed text-muted-foreground italic line-clamp-4">
                   "{testimonials[currentIndex].text}"
                 </p>
-                <div className="mb-6 inline-flex items-center rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-[#8a6a05]">
+                <div className="mb-6 inline-flex items-center rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
                   Verified learner outcome
                 </div>
                 <div>
@@ -144,7 +131,7 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
             </button>
           </div>
 
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-6 flex items-center justify-center gap-3">
             {testimonials.map((testimonial, index) => (
               <button
                 key={testimonial.name}
@@ -157,6 +144,16 @@ export default function TestimonialsSection({ shouldReduceMotion, testimonials }
                 }`}
               />
             ))}
+            <button
+              type="button"
+              onClick={() => setIsPaused((prev) => !prev)}
+              className="ml-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors duration-300 hover:border-accent hover:text-accent"
+              aria-label={isPaused ? "Resume testimonial autoplay" : "Pause testimonial autoplay"}
+              aria-pressed={isPaused}
+            >
+              {isPaused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
+              {isPaused ? "Play" : "Pause"}
+            </button>
           </div>
         </div>
       </div>

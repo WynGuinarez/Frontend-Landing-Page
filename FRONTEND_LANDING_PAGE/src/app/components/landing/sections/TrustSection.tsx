@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { ShieldCheck } from "lucide-react";
 
 interface TrustSectionProps {
   shouldReduceMotion: boolean;
@@ -7,7 +6,7 @@ interface TrustSectionProps {
 
 export default function TrustSection({ shouldReduceMotion }: TrustSectionProps) {
   return (
-    <section id="trust" className="landing-section relative z-10 scroll-mt-28 bg-muted/80 backdrop-blur-[1px]">
+    <section id="trust" className="landing-section relative z-10 scroll-mt-28 bg-background/90 backdrop-blur-[1px]">
       <div className="landing-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -36,7 +35,6 @@ export default function TrustSection({ shouldReduceMotion }: TrustSectionProps) 
             {
               title: "Flexible online classes",
               text: "Students learn through accessible online sessions designed to fit modern schedules.",
-              icon: <ShieldCheck className="h-5 w-5 text-accent" />,
             },
           ].map((item) => (
             <div key={item.title} className="landing-card landing-card-hover">

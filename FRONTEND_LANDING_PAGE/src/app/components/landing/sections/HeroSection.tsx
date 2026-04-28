@@ -33,7 +33,7 @@ export default function HeroSection({ shouldReduceMotion }: HeroSectionProps) {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="landing-eyebrow"
             >
-              <span className="text-sm font-semibold text-[#8a6a05]">
+              <span className="text-sm font-semibold text-accent">
                 Online institution for guided, flexible learning
               </span>
             </motion.div>
@@ -53,7 +53,7 @@ export default function HeroSection({ shouldReduceMotion }: HeroSectionProps) {
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
                 whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                 type="button"
-                className="landing-primary-btn px-8 py-4 shadow-lg"
+                className="landing-primary-btn px-8 py-4 text-lg shadow-lg"
                 aria-describedby="enroll-note"
               >
                 Enroll Now

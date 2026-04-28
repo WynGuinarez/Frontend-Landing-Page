@@ -83,7 +83,7 @@ export default function LandingNavbar() {
       initial={shouldReduceMotion ? false : { y: -100 }}
       animate={shouldReduceMotion ? undefined : { y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 z-50 w-full border-b bg-background/90 backdrop-blur-sm transition-all duration-300 ${
+      className={`glass-navbar fixed top-0 z-50 w-full transition-all duration-300 ${
         isScrolled ? "border-border shadow-md" : "border-border/80 shadow-sm"
       }`}
     >
@@ -139,27 +139,16 @@ export default function LandingNavbar() {
             type="button"
             aria-label="Close menu overlay"
             onClick={closeMobileMenu}
-            className="fixed inset-0 z-40 bg-black/45 sm:hidden"
+            className="fixed inset-0 z-[60] bg-black/35 backdrop-blur-[1px] sm:hidden"
           />
-          <div className="fixed top-0 right-0 z-50 h-full w-72 border-l border-border bg-background p-5 shadow-xl sm:hidden">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-foreground">Menu</p>
-              <button
-                onClick={closeMobileMenu}
-                className="flex min-h-10 min-w-10 items-center justify-center rounded-lg border border-border text-muted-foreground"
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="mt-6 space-y-2">
+          <div className="fixed inset-x-0 top-[72px] z-[70] border-t border-border bg-background px-5 pb-6 pt-4 shadow-xl sm:hidden">
+            <div className="space-y-2">
               {NAV_LINKS.map((item) => (
                 <a
                   key={item.label}
                   href={getSectionHref(item.hash)}
                   onClick={closeMobileMenu}
-                  className={`block min-h-11 rounded-lg px-3 py-3 text-sm transition-colors duration-200 ${
+                  className={`block min-h-11 w-full rounded-lg px-3 py-3 text-sm transition-colors duration-200 ${
                     !isLoginRoute && activeSection === item.hash
                       ? "bg-secondary text-accent"
                       : "text-muted-foreground hover:bg-secondary"
@@ -175,7 +164,7 @@ export default function LandingNavbar() {
                 closeMobileMenu();
                 goToLoginInterface();
               }}
-              className="mt-6 min-h-11 w-full rounded-lg bg-black px-4 py-3 text-sm font-semibold text-white"
+              className="landing-primary-btn mt-5 w-full px-4 py-3 text-sm"
             >
               Login
             </button>
